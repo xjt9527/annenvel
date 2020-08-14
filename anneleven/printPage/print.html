@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>打印</title>
+    <style type="text/css">
+      @media print {
+        html,
+        body{
+          margin:0;
+          padding:0;
+        }
+            @page { margin: 0; }
+            .piao{
+              page-break-after: always;
+              margin-left: 0;
+            }
+        }
+       
+
+
+        #toPrint{
+          display:block;
+          padding: 20px;
+          text-align:center;
+          width: 200px;
+          background:#00aeef;
+          color:#fff;
+          font-weight:bold;
+          font-size: 16px;
+          border:0;
+          margin: 10px auto;
+          border-radius: 30px;
+        }
+    </style>
+    <script src="./qrcode.min.js"></script>
+    <script src="./LodopFuncs.js"></script>
+  </head>
+  <body style="background-color:#fff;padding:0;margin:0;">
+
+    <button id="toPrint">打印</button>
+    <!--startprint-->
+
+    <div id="ppp">
+      <table class="piao" style="font-size: 16px;line-height:36px;">
+        <tr>
+          <td colspan="2" style="text-align:center;padding: 30px 0;" class="logo">
+            <img src="http://anneleven.oss-cn-beijing.aliyuncs.com/dev/design/1191505313036513280.png?x-oss-process=image/resize,w_200" width="180" style="margin-bottom:10px" /> <br>
+            <img src="http://anneleven.oss-cn-beijing.aliyuncs.com/dev/design/1191505313036513280.png?x-oss-process=image/resize,w_200" width="180" />
+          </td>
+        </tr>
+        <tr>
+          <td width="70">订单号:</td>
+          <td class="orderId"></td>
+        </tr>
+        <tr>
+          <td>顾客:</td>
+          <td class="buyer"></td>
+        </tr>
+        <tr>
+          <td>手机:</td>
+          <td class="phoneNum"></td>
+        </tr>
+        <tr>
+          <td>商品:</td>
+          <td class="goodname"></td>
+        </tr>
+        <tr>
+          <td>尺码:</td>
+          <td class="size"></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;" class="print-date"></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+            <div id="qrcode" style="width:180px;margin:0 auto;"></div class="ewm">
+          </td>
+        </tr>
+      </table>
+      <br><br>
+      <table class="piao" style="font-size: 16px;line-height:36px;">
+        <tr>
+          <td colspan="2" style="text-align:center;padding: 30px 0;" class="logo">
+            <img src="http://anneleven.oss-cn-beijing.aliyuncs.com/dev/design/1191505313036513280.png?x-oss-process=image/resize,w_200" width="180" style="margin-bottom:10px" /> <br>
+            <img src="http://anneleven.oss-cn-beijing.aliyuncs.com/dev/design/1191505313036513280.png?x-oss-process=image/resize,w_200" width="180" />
+          </td>
+        </tr>
+        <tr>
+          <td width="70">订单号:</td>
+          <td class="orderId"></td>
+        </tr>
+        <tr>
+          <td>顾客:</td>
+          <td class="buyer"></td>
+        </tr>
+        <tr>
+          <td>手机:</td>
+          <td class="phoneNum"></td>
+        </tr>
+        <tr>
+          <td>商品:</td>
+          <td class="goodname"></td>
+        </tr>
+        <tr>
+          <td>尺码:</td>
+          <td class="size"></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;" class="print-date"></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+            <div id="qrcode2" style="width:180px;margin:0 auto;"></div class="ewm">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+
+
+    <!--endprint-->
+    <script>
+
+            var printData = localStorage.getItem('printData');
+            printData = JSON.parse(printData);
+
+
+            let y = location.href.split('=')[1];
+            y = decodeURIComponent(y)
+            var printData = JSON.parse(y);
+
+
+            function addZero(value) {
+                if (value >= 10) {
+                    return value;
+                } else {
+                    return '0' + value;
+                }
+            }
+
+            var now = new Date();
+            var time = now.getFullYear() + '-' + addZero(now.getMonth() + 1) + '-' + addZero(now.getDate()) + ' '
+                    + addZero(now.getHours()) + ':' + addZero(now.getMinutes()) + ':' + addZero(now.getSeconds())
+
+            var x = document.querySelectorAll('.print-date');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].innerHTML = time
+            }
+
+            var x = document.querySelectorAll('.orderId');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].innerHTML = printData.orderId
+            }
+
+            var x = document.querySelectorAll('.buyer');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].innerHTML = printData.buyer
+            }
+
+            var x = document.querySelectorAll('.phoneNum');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].innerHTML = printData.phoneNumber
+            }
+
+            var x = document.querySelectorAll('.goodname');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].innerHTML = printData.skuCode
+            }
+
+            var x = document.querySelectorAll('.size');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].innerHTML = printData.size
+            }
+
+            var qrcode =  new QRCode(document.getElementById("qrcode"), {
+                width: 180, //图像宽度
+                height: 180, //图像高度
+                colorDark: "#000000", //前景色
+                colorLight: "#ffffff", //背景色
+                typeNumber: 4
+            });
+            qrcode.clear();
+            qrcode.makeCode(printData.orderId + "");
+
+            var qrcode2 =  new QRCode(document.getElementById("qrcode2"), {
+                width: 180, //图像宽度
+                height: 180, //图像高度
+                colorDark: "#000000", //前景色
+                colorLight: "#ffffff", //背景色
+                typeNumber: 4
+            });
+            qrcode2.clear();
+            qrcode2.makeCode(printData.orderId + "");
+
+            var x = document.querySelectorAll('.qrcode-img');
+            for(var i = 0; i< x.length; i ++) {
+                x[i].src = printData.imgUrl
+            }
+
+            var LODOP;
+            document.querySelector('#toPrint').addEventListener('click', function() {
+
+              LODOP=getLodop();  
+              LODOP.PRINT_INITA(0,0, 800, 2080,"");
+              LODOP.SET_PRINTER_INDEX("EPSON TM-T60 Receipt")
+              // LODOP.SET_PRINT_PAGESIZE(1,'80mm','148mm');
+              LODOP.ADD_PRINT_HTM(10,10,700,2000, document.getElementById('ppp').innerHTML);
+              LODOP.PRINT();
+
+              // LODOP.PRINT_INITA(0,0, 800, 1480);
+              // LODOP.SET_PRINTER_INDEX("EPSON TM-T60 Receipt")
+              // LODOP.SET_PRINT_PAGESIZE(1,'80mm','148mm');
+              // LODOP.ADD_PRINT_HTM(10,10,700,1400,document.getElementById('ppp').innerHTML);
+              // LODOP.PRINT();
+
+                var self = this;
+                this.style.display='none';
+                  setTimeout(function() {
+                      // window.print();
+                  setTimeout(function(){
+                    self.style.display='block';
+                  },100)
+                }, 500)
+            
+            })
+        </script>
+  </body>
+</html>
