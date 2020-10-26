@@ -6,3 +6,4 @@ node_modules/
 .gitconfig
 v8-compile-cache-0
 env.json
+dist/
