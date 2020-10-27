@@ -1,9 +1,9 @@
 .DS_Store
 .idea/
 backups/
+dist/
 node_modules/
 .project
 .gitconfig
 v8-compile-cache-0
 env.json
-dist/
